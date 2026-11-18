@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FLORDE.ZAR 🌸 Sewa Papan Ucapan Padang</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Dancing+Script:wght@600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>tailwind.config={theme:{extend:{colors:{cream:'#FFF8F3',coral:'#FF6B8B',sun:'#FFD166',sage:'#2D6A4F',wa:'#25D366'},fontFamily:{fun:['Fredoka','sans-serif'],sans:['Plus Jakarta Sans','sans-serif']}}}}</script>
+<style>
+body{background:#FFF8F3}
+.btn3d{box-shadow:0 5px 0 var(--sh,#d94a6b);transition:transform .08s,box-shadow .08s}
+.btn3d:active{transform:translateY(4px);box-shadow:0 1px 0 var(--sh,#d94a6b)}
+.stage{background:radial-gradient(ellipse 80% 40% at 50% 112%,#b7e4c7 0 60%,transparent 61%),linear-gradient(#ffe3ec,#fff4d6);position:relative;overflow:hidden}
+.sp{position:absolute;color:#FFD166;animation:tw 2.4s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.15;transform:scale(.6) rotate(0)}50%{opacity:1;transform:scale(1.2) rotate(25deg)}}
+@keyframes pop{0%{transform:scale(.8) translateY(14px);opacity:.3}60%{transform:scale(1.06)}100%{transform:none;opacity:1}}
+.pop{animation:pop .5s cubic-bezier(.3,1.5,.5,1)}
+.sel{outline:4px solid #FF6B8B;outline-offset:1px;animation:pop .35s}
+.tabb.on{background:#FF6B8B;color:#fff;--sh:#d94a6b}
+@media (prefers-reduced-motion:reduce){.sp,.pop,.sel{animation:none}}
+:focus-visible{outline:3px solid #2D6A4F;outline-offset:2px}
+</style>
+</head>
+<body class="font-sans text-stone-800">
+<header class="text-center pt-5 pb-3 px-4">
+  <h1 class="font-fun font-bold text-3xl text-sage">FLORDE.ZAR 🌸</h1>
+  <p class="font-fun text-coral">From Heart To Bloom • Padang</p>
+  <div class="mt-2 flex flex-wrap justify-center gap-2 text-xs font-semibold">
+    <span class="rounded-full bg-sun px-3 py-1">Booking Min. H-1</span><span class="rounded-full bg-coral text-white px-3 py-1">Sewa Papan Ucapan</span><span class="rounded-full bg-sage text-white px-3 py-1">Area Padang</span></div>
+  <div class="mt-3 flex justify-center gap-2 font-fun font-semibold">
+    <button data-mode="play" class="modeb btn3d rounded-2xl px-4 py-2.5 text-sm">🎮 Main Custom Papan</button>
+    <button data-mode="rekap" class="modeb btn3d rounded-2xl px-4 py-2.5 text-sm">🧾 Rekap &amp; Input Invoice</button></div>
+</header>
+
+<div id="play" class="max-w-md mx-auto">
+  <div class="sticky top-0 z-30 px-3 pt-2 bg-cream">
+    <div class="stage rounded-3xl border-4 border-white shadow-lg" style="height:min(42vh,360px)">
+      <span class="sp" style="left:8%;top:12%">✦</span><span class="sp" style="left:86%;top:30%;animation-delay:.7s">✦</span><span class="sp" style="left:18%;top:60%;animation-delay:1.2s">✧</span><span class="sp" style="left:76%;top:8%;animation-delay:1.7s">✧</span>
+      <div id="badge" class="absolute right-2 top-2 z-10 rounded-2xl bg-sun font-fun font-bold text-sm px-3 py-1.5 shadow" style="box-shadow:0 3px 0 #e0a92f"></div>
+      <div id="stageSvg" class="h-full flex justify-center"></div>
+    </div>
+  </div>
+
+  <div class="px-3 mt-3">
+    <div id="tabs" class="flex gap-2 overflow-x-auto pb-3 font-fun font-semibold text-sm whitespace-nowrap"></div>
+    <div id="panels" class="rounded-3xl bg-white border-2 border-orange-100 p-4 mb-10"></div>
+  </div>
+</div>
+
+<div id="rekap" class="max-w-md mx-auto px-3 hidden pb-10">
+  <h2 class="font-fun font-bold text-xl text-sage">Input invoice manual</h2>
+  <div id="manual" class="mt-2 rounded-3xl bg-white border-2 border-orange-100 p-4"></div>
+  <button id="btnManual" class="btn3d w-full mt-3 rounded-2xl bg-sage text-white font-fun font-semibold py-3" style="--sh:#1d4a37">💾 Simpan ke riwayat</button>
+  <div class="flex justify-between items-end mt-6"><h2 class="font-fun font-bold text-xl text-sage">Riwayat invoice</h2><span id="hc" class="text-xs text-stone-500"></span></div>
+  <div id="hist" class="mt-2 space-y-3"></div>
+</div>
+
+<div id="modal" class="fixed inset-0 z-50 hidden bg-black/70 p-4 overflow-y-auto"><div class="max-w-sm mx-auto bg-white rounded-3xl p-3">
+  <img id="mimg" alt="Invoice" class="w-full rounded-xl border"><div class="grid grid-cols-2 gap-2 mt-3 font-fun font-semibold">
+  <a id="mdl" class="btn3d text-center rounded-2xl bg-coral text-white py-3">Unduh PNG</a><button id="mx" class="btn3d rounded-2xl bg-stone-200 py-3" style="--sh:#bbb">Tutup</button></div></div></div>
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-5 z-[60] hidden max-w-[90%] rounded-full bg-stone-900 text-white text-sm px-4 py-2.5"></div>
+<div id="off" style="position:fixed;left:-10000px;top:0;width:380px"></div>
+
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rp=n=>'Rp '+Number(n).toLocaleString('id-ID');
+const WA='6285128050556',KEY='fdz_invoices2',CK='fdz_counter2';
+const crescent=[110,135,160,185,210,235,255].map(a=>{const r=a*Math.PI/180;return[150+98*Math.cos(r),165+98*Math.sin(r)*-1+0,.8]});
+/* ---------- Katalog ---------- */
+const M={
+blackarch:{n:'Black Arch',p:99000,sh:'arch',bc:'#1b1b1b',tb:'bc',ea:'#2b2b2b',tile:'#ffffff',tx:[150,175,120],fl:[[100,82,1],[198,268,1.15]],pal:['#d62839','#ffffff','#b3122a','#f5f5f5']},
+whitearch:{n:'White Arch',p:99000,sh:'arch',bc:'#fbeaf0',tb:'bc',ea:'#2b2b2b',tile:'#f48fb1',tx:[150,175,120],fl:[[200,85,1],[100,268,1.15]],pal:['#ec407a','#ffffff','#f8bbd0','#f06292']},
+glass:{n:'Glass Square',p:99000,sh:'glass',bc:'#ffffff',tb:'bc',ea:'#2b2b2b',tile:'#ffffff',tx:[150,175,120],fl:[[150,62,1],[150,288,1.1]],pal:['#1a1a1a','#ffffff','#e8772e','#f5f5f5'],cc:'#ffd166'},
+bluemoon:{n:'Blue Moon',p:99000,sh:'round',bc:'#ffffff',tb:'bc',ea:'#2b2b2b',tile:'#5da9e9',tx:[168,168,110],fl:crescent,pal:['#3b82f6','#ffffff','#60a5fa','#1d4ed8']},
+orchid:{n:'Orchid Grid',p:110000,sh:'glass',bc:'#ffffff',tr:'#f06292',tb:'bc',ea:'#2b2b2b',tx:[150,170,120],fl:[[150,272,1.25],[88,66,.8],[212,66,.8]],pal:['#e91e63','#f48fb1','#ffffff','#ec407a'],rb:[150,58,'#e91e63']},
+mocha:{n:'Mocha Tone',p:125000,sh:'wavein',bc:'#7b4a2e',tr:'#e8c9a0',tb:'bc',ea:'#2b2b2b',tile:null,tx:[150,190,185],fl:[[68,262,.8],[120,266,.8],[180,266,.8],[232,262,.8]],pal:['#ffffff','#c98b86','#b76e6a','#f5e6e0'],rb:[50,112,'#7b1022']},
+tulip:{n:'Tulip Bloom',p:125000,sh:'wavein',bc:'#f27ea5',tr:'#f4c7a1',tb:'bc',ea:'#2b2b2b',tx:[150,185,185],fl:[[68,262,.8],[120,266,.8],[180,266,.8],[232,262,.8]],pal:['#ec407a','#ffffff','#f8bbd0','#f06292'],rb:[50,112,'#d81b60']},
+sun:{n:'Sun Mirror',p:135000,sh:'mirror',bc:'#5b2f1a',tr:'#e8cfa8',tb:'#dfe9ee',ea:'#2b2b2b',tx:[150,190,185],fl:[[48,126,1.1],[256,208,1.1],[262,246,1]],pal:['#f6b600','#f59f00','#ffc933','#f6b600'],cc:'#5b3a1a',rb:[52,112,'#e9d3b0']},
+prism:{n:'Prism Mirror',p:135000,sh:'prism',bc:'#ffffff',tb:'#dfe9ee',ea:'#c99a63',tx:[150,150,105],fl:[[102,252,.7],[134,255,.7],[166,253,.7],[198,255,.7]],pal:['#d62839','#ffd166','#f3d9c7','#d62839'],rb:[212,58,'#c62828']},
+shelf:{n:'Flora Shelf',p:135000,sh:'shelf',bc:'#7a4a2a',tb:'bc',ea:null,tx:[150,140,110],fl:[[100,240,.75],[135,243,.75],[170,241,.75],[205,243,.75]],pal:['#f48fb1','#ffffff','#ec407a','#fce4ec']},
+rustic:{n:'Red Rustic',p:150000,sh:'rect',bc:'#7b1022',tb:'bc',ea:'#c99a63',tile:null,tx:[150,172,200],fl:[[62,100,1.1],[238,100,1.1]],pal:['#c62839','#f8bbd0','#ffffff','#e57390']}
+};
+const FP={pink:['#ec407a','#f8bbd0','#fff','#f06292'],merah:['#d62839','#b3122a','#fff','#e57390'],biru:['#3b82f6','#60a5fa','#fff','#1d4ed8'],kuning:['#f6b600','#ffd166','#fff','#f59f00'],putih:['#fff','#f5f5f5','#fce4ec','#e8f5e9'],ungu:['#9b5de5','#c8a2ff','#fff','#7b2cbf']};
+const FPN={asli:'Asli katalog',pink:'🌸 Pink',merah:'🌹 Merah',biru:'💙 Biru',kuning:'🌻 Kuning',putih:'🤍 Putih',ungu:'💜 Ungu'};
+const BCS=['#1b1b1b','#ffffff','#7b1022','#f27ea5','#2D6A4F','#5da9e9','#f5ecd7','#FFD166'],RCS=['#e91e63','#c62828','#FFD166','#5da9e9','#2D6A4F','#ffffff'];
+const STK={kupu:['🦋','Kupu-kupu kecil'],pita:['🎀','Pita estetik'],topi:['🎓','Topi wisuda'],cincin:['💍','Cincin nikah']};
+const TPL=['Happy Wedding','Semprotulation','Congratulation','Grand Opening','Turut Berduka Cita'];
+const FONTS={script:['✍️ Romantis/Script',"'Dancing Script',cursive"],bold:['💪 Modern/Bold',"'Fredoka',sans-serif"],serif:['📜 Klasik/Serif',"'Playfair Display',serif"]};
+const ADD={lamp:25000,express:30000};
+/* ---------- Gambar SVG ---------- */
+let U=0;
+const lum=h=>{h=h.replace('#','');if(h.length===3)h=h.replace(/./g,'$&$&');const[a,b,c]=[0,2,4].map(i=>parseInt(h.substr(i,2),16));return(.299*a+.587*b+.114*c)/255};
+const shade=(h,f)=>'#'+[1,3,5].map(i=>Math.round(parseInt(h.substr(i,2),16)*f).toString(16).padStart(2,'0')).join('');
+function wavy(x,y,w,h,a,n){const m=Math.max(2,Math.round(h/(w/n))),sx=w/n,sy=h/m;let d=`M${x} ${y}`;
+ for(let i=0;i<n;i++)d+=`q${sx/2} ${i%2?a:-a} ${sx} 0`;for(let i=0;i<m;i++)d+=`q${i%2?-a:a} ${sy/2} 0 ${sy}`;
+ for(let i=0;i<n;i++)d+=`q${-sx/2} ${i%2?-a:a} ${-sx} 0`;for(let i=0;i<m;i++)d+=`q${i%2?a:-a} ${-sy/2} 0 ${-sy}`;return d+'Z'}
+function flower(x,y,s,c,cc){let p='';for(let i=0;i<6;i++){const a=i*Math.PI/3;p+=`<circle cx="${(x+Math.cos(a)*7*s).toFixed(1)}" cy="${(y+Math.sin(a)*7*s).toFixed(1)}" r="${(7*s).toFixed(1)}" fill="${c}" stroke="rgba(0,0,0,.18)" stroke-width=".7"/>`}return p+`<circle cx="${x}" cy="${y}" r="${5*s}" fill="${cc}"/>`}
+function cluster(x,y,s,pal,cc){const o=[[0,0,1.2],[-17,9,1],[16,11,1.05],[-7,-15,.9],[11,-13,.85]];
+ let g=[[-22,2,-30],[20,-2,25],[0,17,90]].map(l=>`<ellipse cx="${x+l[0]*s}" cy="${y+l[1]*s}" rx="${15*s}" ry="${6*s}" fill="#2D6A4F" transform="rotate(${l[2]} ${x+l[0]*s} ${y+l[1]*s})"/>`).join('');
+ return g+o.map((q,i)=>flower(x+q[0]*s,y+q[1]*s,q[2]*s,pal[i%pal.length],cc)).join('')}
+function bow(x,y,c){return`<g><ellipse cx="${x-12}" cy="${y}" rx="13" ry="7" fill="${c}" transform="rotate(-25 ${x-12} ${y})"/><ellipse cx="${x+12}" cy="${y}" rx="13" ry="7" fill="${c}" transform="rotate(25 ${x+12} ${y})"/><path d="M${x-3} ${y+3}l-9 26 7-3 5 5zM${x+3} ${y+3}l9 26-7-3-5 5z" fill="${shade(c,.85)}"/><circle cx="${x}" cy="${y}" r="5" fill="${shade(c,.8)}"/></g>`}
+function boardSVG(r,o={}){
+ const m=M[r.model],u=++U,bc=r.bc||m.bc,pal=FP[r.fp]||m.pal,ea=m.ea,cc=m.cc||'#ffd166';
+ const sb=m.tb==='bc'?bc:m.tb,tc=lum(sb)>.55?'#7a1f3d':'#FFF3E0',tr=m.tr||'#d9cbbd';
+ const mir=`url(#mi${u})`;let b='',back='',front='';
+ const defs=`<defs><linearGradient id="mi${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef5f8"/><stop offset=".5" stop-color="#c4d6de"/><stop offset="1" stop-color="#e6eff3"/></linearGradient><radialGradient id="gl${u}"><stop offset="0" stop-color="#fff3b0" stop-opacity=".9"/><stop offset="1" stop-color="#fff3b0" stop-opacity="0"/></radialGradient></defs>`;
+ if(ea)back+=`<g stroke="${ea}" stroke-width="6" stroke-linecap="round"><line x1="150" y1="150" x2="88" y2="392"/><line x1="150" y1="150" x2="212" y2="392"/><line x1="150" y1="160" x2="150" y2="396" stroke-width="4" opacity=".6"/></g><rect x="98" y="270" width="104" height="7" rx="3" fill="${ea}"/>`;
+ if(m.tile!==undefined&&m.tile)back+=`<path d="M118 278Q150 290 182 278L198 372Q150 388 102 372Z" fill="${m.tile}" stroke="rgba(0,0,0,.12)"/><path d="M140 288L134 378M160 288L166 378" stroke="rgba(0,0,0,.08)" fill="none"/>`;
+ if(m.sh==='arch')b=`<path d="M75 290V125A75 75 0 0 1 225 125V290Z" fill="${bc}" stroke="${shade(bc.length===7?bc:'#cccccc',.85)}" stroke-width="3"/>`;
+ else if(m.sh==='round')b=`<circle cx="150" cy="165" r="95" fill="${bc}" stroke="#ddd" stroke-width="3"/>`;
+ else if(m.sh==='glass')b=`<path d="${wavy(66,51,168,248,6,5)}" fill="rgba(255,255,255,.4)" stroke="#bcd9e8" stroke-width="3"/><path d="${wavy(75,60,150,230,6,5)}" fill="${bc}" stroke="${tr==='#d9cbbd'?'#e3edf2':tr}" stroke-width="5"/>`;
+ else if(m.sh==='wavein')b=`<path d="${wavy(28,108,244,164,7,6)}" fill="#fff" stroke="${tr}" stroke-width="5"/><rect x="44" y="124" width="212" height="132" rx="6" fill="${bc}"/>`;
+ else if(m.sh==='mirror')b=`<path d="${wavy(28,108,244,164,7,6)}" fill="${bc}" stroke="${tr}" stroke-width="5"/><rect x="46" y="126" width="208" height="128" rx="4" fill="${mir}"/><path d="M80 254L130 126M120 254L170 126" stroke="#fff" stroke-opacity=".5" stroke-width="8"/>`;
+ else if(m.sh==='prism'){const P='M90 60Q70 120 95 170Q115 215 85 245L215 245Q235 190 210 140Q190 85 215 60Z';b=`<path d="${P}" fill="${bc}" stroke="#cbd5dc" stroke-width="4"/><path d="${P}" transform="translate(150 152) scale(.84) translate(-150 -152)" fill="${mir}"/><rect x="80" y="245" width="140" height="46" rx="3" fill="#fff" stroke="#ddd"/><text x="150" y="284" font-size="7" text-anchor="middle" fill="#999">flordezar</text>`}
+ else if(m.sh==='shelf'){back='<g stroke="#8a5a36" stroke-width="6" stroke-linecap="round"><line x1="110" y1="230" x2="62" y2="388"/><line x1="190" y1="230" x2="238" y2="388"/></g>';b=`<rect x="85" y="58" width="130" height="190" rx="3" fill="${bc}"/>`;front=`<path d="M75 238H225L215 292H85Z" fill="${shade(bc.length===7?bc:'#7a4a2a',.75)}"/>`}
+ else b=`<rect x="28" y="90" width="244" height="172" rx="4" fill="${bc}" stroke="rgba(0,0,0,.25)" stroke-width="2"/><g stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"><path d="M42 248q8-22 22-10q-9 4-7 13q8-6 13 2M258 248q-8-22-22-10q9 4 7 13q-8-6-13 2"/></g>`;
+ /* teks */
+ const[cx,cy,w]=m.tx,fam=FONTS[r.font||'script'][1],isS=(r.font||'script')==='script';
+ const L=(t,ph,base,y,wt,op)=>{const s=t||(o.inv?'':ph);if(!s)return'';const fs=Math.min(base,w/(s.length*.56));return`<text x="${cx}" y="${y}" text-anchor="middle" font-family="${fam}" font-weight="${wt}" font-size="${fs.toFixed(1)}" fill="${tc}" opacity="${t?op:.45}">${esc(s)}</text>`};
+ const txt=o.thumb?'':L(r.head,'Happy Wedding',isS?26:20,cy-28,isS?600:600,1)+L(r.rec,'Nama Penerima',isS?34:28,cy+10,700,1)+L(r.snd,'Nama Pengirim',14,cy+36,500,.9);
+ const sk=(r.stk||[]).map((k,i,a)=>`<text x="${cx+(i-(a.length-1)/2)*30}" y="${cy+62}" font-size="22" text-anchor="middle">${STK[k][0]}</text>`).join('');
+ const fls=m.fl.map(f=>cluster(f[0],f[1],f[2]||1,pal,cc)).join('');
+ const rb=m.rb||(r.rc?[/wave|mirror|rect/.test(m.sh)?250:215,/wave|mirror|rect/.test(m.sh)?118:75,r.rc]:null);
+ const rib=rb?bow(rb[0],rb[1],r.rc||rb[2]):'';
+ const glow=r.lamp?`<ellipse cx="150" cy="60" rx="150" ry="90" fill="url(#gl${u})"/><text x="262" y="36" font-size="22">💡</text>`:'';
+ return`<svg viewBox="${o.vb||'0 0 300 400'}" xmlns="http://www.w3.org/2000/svg" style="height:100%;width:100%;max-width:100%">${defs}${glow}<ellipse cx="150" cy="394" rx="90" ry="7" fill="rgba(0,0,0,.14)"/>${back}${b}${front}${txt}${sk}${fls}${rib}</svg>`}
+/* ---------- State & util ---------- */
+const S={model:'blackarch',bc:null,fp:'asli',rc:null,head:'Happy Wedding',rec:'',snd:'',font:'script',stk:[],lamp:false,express:false};
+const total=r=>M[r.model].p+(r.lamp?ADD.lamp:0)+(r.express?ADD.express:0);
+const store=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
+const putS=a=>{try{localStorage.setItem(KEY,JSON.stringify(a));return true}catch(e){toast('Penyimpanan browser tidak tersedia.');return false}};
+const cnt=()=>{try{return parseInt(localStorage.getItem(CK)||'0',10)||0}catch(e){return 0}};
+const invNo=n=>'INV-FDZ-'+new Date().getFullYear()+'-'+String(n).padStart(3,'0');
+let draft=cnt()+1,tt;
+const toast=m=>{const t=$('toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(tt);tt=setTimeout(()=>t.classList.add('hidden'),2800)};
+const fdate=v=>{const d=new Date(v);return v&&!isNaN(d)?d.toLocaleString('id-ID',{dateStyle:'full',timeStyle:'short'}):'-'};
+const IN='w-full rounded-2xl border-2 border-orange-100 bg-cream px-3 py-2.5 text-sm focus:border-coral focus:outline-none';
+const LB='block text-sm font-semibold mb-1';
+/* ---------- Invoice ---------- */
+function invHTML(r){const m=M[r.model],cust=[r.bc&&'warna papan custom',r.fp!=='asli'&&'bunga '+FPN[r.fp].replace(/^\S+\s/,''),r.rc&&'pita custom'].filter(Boolean).join(', ');
+ const row=(a,b,c)=>`<tr style="border-bottom:1px dashed #e7d8cc;vertical-align:top"><td style="padding:6px 6px 6px 0">${a}${c?`<div style="font-size:11px;color:#8a7a70">${c}</div>`:''}</td><td style="text-align:right;white-space:nowrap;padding:6px 0">${b}</td></tr>`;
+ return`<div style="background:#fff;font:13px 'Plus Jakarta Sans',sans-serif;color:#2b2b2b"><div style="background:#2D6A4F;color:#fff;padding:14px 18px"><div style="font:700 22px Fredoka,sans-serif">FLORDE.ZAR 🌸</div><div style="font:500 13px Fredoka,sans-serif;color:#FFD166">From Heart To Bloom</div></div>
+ <div style="padding:14px 18px"><div style="display:flex;justify-content:space-between"><div><div style="font-size:11px;color:#8a7a70">No. Invoice</div><b>${esc(r.id)}</b></div><div style="text-align:right"><div style="font-size:11px;color:#8a7a70">Dibuat</div>${new Date(r.created).toLocaleDateString('id-ID',{dateStyle:'medium'})}</div></div>
+ <div style="width:170px;height:226px;margin:10px auto 0;background:#FFF8F3;border-radius:14px">${boardSVG(r,{inv:1})}</div>
+ <div style="margin-top:8px;font-size:11px;color:#8a7a70">Pemesan</div><b>${esc(r.name||'-')} · ${esc(r.wa||'-')}</b>
+ <div style="margin-top:6px;font-size:11px;color:#8a7a70">Acara</div>${esc(fdate(r.date))}
+ <div style="margin-top:6px;font-size:11px;color:#8a7a70">Alamat pengiriman</div>${esc(r.addr||'-')}
+ <table style="width:100%;margin-top:10px;border-collapse:collapse">${row(esc(m.n),rp(m.p),'Model katalog'+(cust?' · '+esc(cust):''))}${row('Ucapan',' ',`${esc(r.head)}<br>Untuk: ${esc(r.rec)}<br>Dari: ${esc(r.snd||'-')}<br>Gaya: ${esc(FONTS[r.font][0])}${r.stk.length?'<br>Stiker: '+r.stk.map(k=>STK[k][0]).join(' '):''}`)}${r.lamp?row('Lampu Sorot Mini',rp(ADD.lamp)):''}${r.express?row('Express Order &lt; H-1',rp(ADD.express)):''}</table>
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px"><b>Total Biaya Sewa</b><b style="color:#FF6B8B;font-size:19px">${rp(total(r))}</b></div>
+ <p style="margin-top:10px;font-size:11px;color:#8a7a70">*Harga tercantum merupakan biaya sewa dan belum termasuk ongkos kirim (dihitung admin berdasarkan lokasi pemasangan).</p></div></div>`}
+const rec=(d,c,n)=>({...d,...c,id:invNo(n),n,created:Date.now()});
+async function canvas(r){const b=document.createElement('div');b.style.width='380px';b.innerHTML=invHTML(r);$('off').appendChild(b);
+ try{if(document.fonts&&document.fonts.ready)await document.fonts.ready;return await html2canvas(b,{scale:2,backgroundColor:'#fff'})}finally{b.remove()}}
+function dl(c,n){const a=document.createElement('a');a.download=n+'.png';a.href=c.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove()}
+function waText(r){const m=M[r.model],add=[r.lamp&&'Lampu Sorot Mini',r.express&&'Express Order'].filter(Boolean).join(', ')||'-',cu=[r.bc&&'warna papan '+r.bc,r.fp!=='asli'&&'bunga '+r.fp,r.rc&&'pita '+r.rc].filter(Boolean).join(', ')||'sesuai katalog';
+ return['*ORDER FLORDE.ZAR* 🌸',`No. Invoice: *${r.id}*`,'','*Data Pemesan*',`Nama: ${r.name}`,`WhatsApp: ${r.wa}`,`Acara: ${fdate(r.date)}`,`Alamat: ${r.addr}`,'','*Model & Custom Ucapan*',`Model: ${m.n} (${rp(m.p)})`,`Custom: ${cu}`,`Header: ${r.head}`,`Untuk: ${r.rec}`,`Dari: ${r.snd||'-'}`,`Gaya tulisan: ${FONTS[r.font][0]}`,`Stiker: ${r.stk.map(k=>STK[k][1]).join(', ')||'-'}`,`Add-ons: ${add}`,'',`*Estimasi Total: ${rp(total(r))}*`,'(Belum termasuk ongkos kirim)'].join('\n')}
+function openWa(r){const u=`https://wa.me/${WA}?text=${encodeURIComponent(waText(r))}`;if(!window.open(u,'_blank'))location.href=u}
+function save(r){const a=store().filter(x=>x.id!==r.id);a.unshift(r);if(!putS(a))return false;try{localStorage.setItem(CK,String(Math.max(cnt(),r.n)))}catch(e){}return true}
+const check=r=>!r.name?'Isi nama pemesan.':r.wa.replace(/\D/g,'').length<9?'Isi nomor WhatsApp yang valid.':!r.date?'Isi tanggal & jam acara.':!r.addr?'Isi alamat pengiriman.':!r.head?'Isi header ucapan.':!r.rec?'Isi nama penerima / mempelai.':'';
+const cust=p=>({name:$(p+'name').value.trim(),wa:$(p+'wa').value.trim(),date:$(p+'date').value,addr:$(p+'addr').value.trim()});
+const custForm=p=>`<div class="space-y-3"><div><label class="${LB}" for="${p}name">Nama pemesan</label><input id="${p}name" class="${IN}" autocomplete="name"></div><div><label class="${LB}" for="${p}wa">No. WhatsApp</label><input id="${p}wa" type="tel" inputmode="tel" class="${IN}" placeholder="08xxxxxxxxxx"></div><div><label class="${LB}" for="${p}date">Tanggal &amp; jam acara</label><input id="${p}date" type="datetime-local" class="${IN}"></div><div><label class="${LB}" for="${p}addr">Alamat lengkap pengiriman (Padang)</label><textarea id="${p}addr" rows="3" class="${IN}"></textarea></div></div>`;
+/* ---------- UI ---------- */
+const TABS=[['💐','Pilih Model'],['🎨','Warna & Bunga'],['✍️','Tulis Ucapan'],['✨','Stiker & Add-Ons'],['🚀','Checkout']];
+const sw=(g,v,st,l='')=>`<button data-g="${g}" data-v="${v}" aria-label="${g} ${v}" class="h-11 min-w-11 rounded-2xl border-2 border-stone-200 text-xs font-semibold px-2" style="${st}">${l}</button>`;
+function build(){
+ $('tabs').innerHTML=TABS.map((t,i)=>`<button data-t="${i}" class="tabb btn3d rounded-2xl bg-white border-2 border-orange-100 px-3.5 py-2.5" style="--sh:#f0d9c8">${t[0]} ${t[1]}</button>`).join('');
+ const cards=Object.entries(M).map(([k,m])=>`<button data-g="model" data-v="${k}" class="rounded-2xl border-2 border-orange-100 bg-cream p-2 text-left"><div class="stage rounded-xl" style="height:150px">${boardSVG({model:k,bc:null,fp:'asli',rc:null,font:'bold',stk:[]},{thumb:1,vb:'20 30 260 370'})}</div><div class="font-fun font-semibold mt-1.5 text-sm">${m.n}</div><div class="text-coral font-bold text-sm">${rp(m.p)}</div></button>`).join('')+`<button type="button" id="lock" class="rounded-2xl border-2 border-dashed border-stone-300 bg-stone-100 p-2 flex flex-col items-center justify-center text-stone-400" style="min-height:196px"><div class="text-5xl">🔒</div><div class="font-fun font-bold text-lg mt-1">???</div><div class="text-xs">Coming Soon</div></button>`;
+ const P=[
+ `<div class="grid grid-cols-2 gap-3">${cards}</div>`,
+ `<h3 class="font-fun font-bold mb-2">Warna papan</h3><div class="flex flex-wrap gap-2">${sw('bc','',"",'Asli')}${BCS.map(c=>sw('bc',c,`background:${c}`)).join('')}</div>
+  <h3 class="font-fun font-bold mt-4 mb-2">Tema warna bunga</h3><div class="flex flex-wrap gap-2">${Object.entries(FPN).map(([k,l])=>sw('fp',k,'',l)).join('')}</div>
+  <h3 class="font-fun font-bold mt-4 mb-2">Warna pita</h3><div class="flex flex-wrap gap-2">${sw('rc','',"",'Asli')}${RCS.map(c=>sw('rc',c,`background:${c}`)).join('')}</div>`,
+ `<h3 class="font-fun font-bold mb-2">Template cepat</h3><div class="flex flex-wrap gap-2 mb-4">${TPL.map(t=>sw('tpl',t,'',t)).join('')}</div>
+  <div class="space-y-3"><div><label class="${LB}" for="head">Header ucapan</label><input id="head" maxlength="40" class="${IN}"></div><div><label class="${LB}" for="rec">Nama penerima / mempelai</label><input id="rec" maxlength="50" class="${IN}" placeholder="Vinda &amp; Fadhil"></div><div><label class="${LB}" for="snd">Nama pengirim / instansi</label><input id="snd" maxlength="60" class="${IN}" placeholder="Keluarga Besar ..."></div></div>
+  <h3 class="font-fun font-bold mt-4 mb-2">Gaya tulisan</h3><div class="flex flex-wrap gap-2">${Object.entries(FONTS).map(([k,v])=>sw('font',k,'',v[0])).join('')}</div>`,
+ `<h3 class="font-fun font-bold mb-2">Stiker gratis</h3><div class="grid grid-cols-2 gap-2">${Object.entries(STK).map(([k,v])=>`<button data-g="stk" data-v="${k}" class="rounded-2xl border-2 border-stone-200 py-3 text-sm font-semibold"><span class="text-2xl block">${v[0]}</span>${v[1]}</button>`).join('')}</div>
+  <h3 class="font-fun font-bold mt-4 mb-1">Add-ons berbayar</h3><label class="flex items-center gap-3 py-2 text-sm"><input type="checkbox" id="lamp" class="w-5 h-5 accent-[#FF6B8B]"> 💡 Lampu Sorot Mini (+Rp 25.000)</label><label class="flex items-center gap-3 py-2 text-sm"><input type="checkbox" id="express" class="w-5 h-5 accent-[#FF6B8B]"> ⚡ Express Order &lt; H-1 (+Rp 30.000)</label>`,
+ `${custForm('c')}<h3 class="font-fun font-bold mt-5 mb-2">Digital Invoice</h3><div id="invLive" class="rounded-2xl overflow-hidden border-2 border-orange-100"></div>
+  <button id="btnDl" class="btn3d w-full mt-4 rounded-2xl bg-sun font-fun font-semibold py-3.5" style="--sh:#e0a92f">📸 Simpan Gambar Invoice (PNG)</button>
+  <button id="btnWa" class="btn3d w-full mt-4 rounded-2xl bg-wa text-white font-fun font-bold text-lg py-4" style="--sh:#1a9e4b">💬 Order &amp; Kirim Invoice ke WhatsApp</button>`];
+ $('panels').innerHTML=P.map((h,i)=>`<div data-p="${i}" class="hidden">${h}</div>`).join('');
+ $('manual').innerHTML=`<div class="space-y-3"><div><label class="${LB}" for="mmodel">Model katalog</label><select id="mmodel" class="${IN}">${Object.entries(M).map(([k,m])=>`<option value="${k}">${m.n} – ${rp(m.p)}</option>`).join('')}</select></div>
+ <div><label class="${LB}" for="mhead">Header ucapan</label><input id="mhead" class="${IN}" value="Happy Wedding"></div><div><label class="${LB}" for="mrec">Nama penerima</label><input id="mrec" class="${IN}"></div><div><label class="${LB}" for="msnd">Nama pengirim</label><input id="msnd" class="${IN}"></div>
+ <label class="flex gap-3 text-sm"><input type="checkbox" id="mlamp" class="w-5 h-5 accent-[#FF6B8B]"> Lampu Sorot Mini (+Rp 25.000)</label><label class="flex gap-3 text-sm"><input type="checkbox" id="mexpress" class="w-5 h-5 accent-[#FF6B8B]"> Express Order (+Rp 30.000)</label>${custForm('m')}</div>`;
+ $('head').value=S.head}
+function sync(){document.querySelectorAll('[data-g]').forEach(e=>{const g=e.dataset.g,v=e.dataset.v;let on=g==='stk'?S.stk.includes(v):g==='tpl'?S.head===v:g==='bc'||g==='rc'?(S[g]||'')===v:S[g]===v;e.classList.toggle('sel',on)})}
+function render(pop){const m=M[S.model];$('stageSvg').innerHTML=boardSVG(S);$('badge').textContent='Harga Sewa: '+rp(total(S));
+ if(pop){const s=$('stageSvg');s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop')}
+ const il=$('invLive');if(il)il.innerHTML=invHTML(rec(S,cust('c'),draft));sync()}
+function tab(i){document.querySelectorAll('#panels>[data-p]').forEach(p=>p.classList.toggle('hidden',+p.dataset.p!==i));document.querySelectorAll('.tabb').forEach(b=>b.classList.toggle('on',+b.dataset.t===i));if(i===4)render()}
+function mode(m){$('play').classList.toggle('hidden',m!=='play');$('rekap').classList.toggle('hidden',m!=='rekap');document.querySelectorAll('.modeb').forEach(b=>{const on=b.dataset.mode===m;b.style.cssText=on?'background:#2D6A4F;color:#fff;--sh:#1d4a37':'background:#fff;color:#2D6A4F;--sh:#d9cdbf;border:2px solid #d9cdbf';});if(m==='rekap')hist();window.scrollTo({top:0})}
+function hist(){const a=store();$('hc').textContent=a.length+' invoice';
+ $('hist').innerHTML=a.length?a.map(r=>`<div class="rounded-3xl bg-white border-2 border-orange-100 p-4"><div class="flex justify-between"><div><b class="text-sm">${esc(r.id)}</b><div class="text-xs text-stone-500">${new Date(r.created).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})}${r.manual?' · manual':''}</div></div><b class="text-coral">${rp(total(r))}</b></div><div class="text-sm mt-1">${esc(r.name)} · ${esc(M[r.model].n)}</div><div class="text-xs text-stone-500">${esc(r.head)} – ${esc(r.rec)}</div>
+ <div class="grid grid-cols-3 gap-2 mt-3 text-xs font-fun font-semibold"><button data-v="${esc(r.id)}" data-a="view" class="btn3d rounded-xl bg-coral text-white py-2.5">Lihat/Unduh PNG</button><button data-v="${esc(r.id)}" data-a="wa" class="btn3d rounded-xl bg-wa text-white py-2.5" style="--sh:#1a9e4b">Kirim Ulang ke WA</button><button data-v="${esc(r.id)}" data-a="del" class="btn3d rounded-xl bg-white border-2 border-red-300 text-red-700 py-2.5" style="--sh:#f3b4b4">Hapus</button></div></div>`).join(''):'<p class="rounded-3xl border-2 border-dashed border-orange-200 p-6 text-center text-sm text-stone-500">Belum ada invoice. Buat pesanan di mode Main Custom Papan atau catat manual di atas.</p>'}
+const advance=()=>{draft=cnt()+1;render()};
+function init(){build();
+ $('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(b)tab(+b.dataset.t)});
+ document.querySelectorAll('.modeb').forEach(b=>b.addEventListener('click',()=>mode(b.dataset.mode)));
+ $('panels').addEventListener('click',e=>{if(e.target.closest('#lock'))return toast('🔒 Model baru segera hadir!');
+  const b=e.target.closest('[data-g]');if(!b)return;const g=b.dataset.g,v=b.dataset.v;
+  if(g==='model'){Object.assign(S,{model:v,bc:null,rc:null,fp:'asli'});render(true);window.scrollTo({top:0,behavior:'smooth'});return}
+  if(g==='stk')S.stk=S.stk.includes(v)?S.stk.filter(x=>x!==v):[...S.stk,v];
+  else if(g==='tpl'){S.head=v;$('head').value=v}
+  else S[g]=v||null;
+  if(g==='fp')S.fp=v;if(g==='font')S.font=v;render(g==='stk')});
+ $('panels').addEventListener('input',e=>{const i=e.target.id;if(['head','rec','snd'].includes(i))S[i]=e.target.value.trim();else if(['lamp','express'].includes(i))S[i]=e.target.checked;render()});
+ $('btnDl').addEventListener('click',async()=>{const r=rec(S,cust('c'),draft),er=check(r);if(er)return toast(er);$('btnDl').disabled=true;
+  try{dl(await canvas(r),r.id);if(save(r)){toast(r.id+' tersimpan 🎉');advance()}}catch(e){toast('Gagal membuat gambar. Coba lagi.')}$('btnDl').disabled=false});
+ $('btnWa').addEventListener('click',()=>{const r=rec(S,cust('c'),draft),er=check(r);if(er)return toast(er);if(!save(r))return;openWa(r);toast(r.id+' tersimpan');advance()});
+ $('btnManual').addEventListener('click',()=>{const d={model:$('mmodel').value,bc:null,fp:'asli',rc:null,font:'script',stk:[],head:$('mhead').value.trim(),rec:$('mrec').value.trim(),snd:$('msnd').value.trim(),lamp:$('mlamp').checked,express:$('mexpress').checked};
+  const r={...rec(d,cust('m'),cnt()+1),manual:true},er=check(r);if(er)return toast(er);if(!save(r))return;toast(r.id+' dicatat');hist();advance();['mrec','msnd','mname','mwa','mdate','maddr'].forEach(i=>$(i).value='')});
+ $('hist').addEventListener('click',async e=>{const b=e.target.closest('[data-a]');if(!b)return;const r=store().find(x=>x.id===b.dataset.v);if(!r)return;
+  if(b.dataset.a==='view'){b.disabled=true;try{const c=await canvas(r);$('mimg').src=c.toDataURL('image/png');$('mdl').href=$('mimg').src;$('mdl').download=r.id+'.png';$('modal').classList.remove('hidden')}catch(x){toast('Gagal membuat gambar.')}b.disabled=false}
+  else if(b.dataset.a==='wa')openWa(r);else if(confirm('Hapus '+r.id+'?')){putS(store().filter(x=>x.id!==r.id));hist();toast('Riwayat dihapus')}});
+ $('mx').addEventListener('click',()=>$('modal').classList.add('hidden'));$('modal').addEventListener('click',e=>{if(e.target===$('modal'))$('modal').classList.add('hidden')});
+ mode('play');tab(0);render(true)}
+init();
+})();
+</script>
+</body>
+</html>
