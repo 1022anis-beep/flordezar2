@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FLORDE.ZAR – Sewa Papan Ucapan Padang</title>
+<meta name="description" content="Sewa papan bunga ucapan di Padang. From Heart To Bloom.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { fg: '#1E3F20', cream: '#FAF8F5', wa: '#25D366' },
+  fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], disp: ['Fraunces', 'serif'] }
+}}};
+</script>
+<style>
+  body { background: #FAF8F5; }
+  .theme-opt input:checked + span { outline: 3px solid #1E3F20; outline-offset: 2px; }
+  .pcard.sel { border-color: #1E3F20; box-shadow: 0 0 0 2px #1E3F20; }
+  .stage { background: linear-gradient(#e9e4da 0 62%, #d8d2c6 62%); }
+  @keyframes pop { from { transform: scale(.96); opacity: 0 } to { transform: none; opacity: 1 } }
+  .pop { animation: pop .2s ease-out; }
+  @media (prefers-reduced-motion: reduce) { .pop { animation: none; } html { scroll-behavior: auto !important; } }
+  :focus-visible { outline: 3px solid #25D366; outline-offset: 2px; }
+</style>
+</head>
+<body class="font-sans text-stone-800 antialiased">
+
+<header class="bg-fg text-cream">
+  <div class="max-w-md mx-auto px-5 pt-8 pb-6">
+    <h1 class="font-disp text-4xl tracking-wide">FLORDE.ZAR</h1>
+    <p class="font-disp italic text-lg text-[#f2d9a0] mt-1">From Heart To Bloom</p>
+    <p class="text-sm mt-3 text-cream/80">Sewa Papan Ucapan Padang</p>
+    <span class="inline-block mt-4 rounded-full bg-cream text-fg text-xs font-semibold px-3 py-1.5">Booking Minimal H-1 | Area Padang</span>
+  </div>
+</header>
+
+<nav class="sticky top-0 z-30 bg-cream/95 backdrop-blur border-b border-stone-200">
+  <div class="max-w-md mx-auto grid grid-cols-2 text-sm font-semibold">
+    <button data-tab="order" class="tabbtn py-3.5 border-b-4">1. Katalog &amp; Custom Order</button>
+    <button data-tab="hist" class="tabbtn py-3.5 border-b-4">2. Input &amp; Riwayat Invoice</button>
+  </div>
+</nav>
+
+<main class="max-w-md mx-auto px-4 pb-16">
+
+<!-- TAB 1 -->
+<section id="tab-order" class="pt-6 space-y-8">
+  <div>
+    <h2 class="font-disp text-2xl text-fg">Pilih papan</h2>
+    <p class="text-sm text-stone-600 mt-1">Semua papan disewakan. Harga belum termasuk ongkos kirim, dihitung berdasarkan lokasi pemasangan.</p>
+    <div id="cards" class="mt-4 space-y-4"></div>
+  </div>
+
+  <div id="customizer" class="scroll-mt-16">
+    <h2 class="font-disp text-2xl text-fg">Desain papan</h2>
+    <div class="mt-3 rounded-2xl border border-stone-200 bg-white p-3">
+      <p class="text-xs font-semibold text-stone-500 mb-2">Live Preview Desain Papan</p>
+      <div id="preview" class="stage rounded-xl px-6 pt-8 pb-4 min-h-[320px] flex flex-col justify-center" style="font-size:16px"></div>
+    </div>
+    <div id="mainForm" class="mt-4 rounded-2xl border border-stone-200 bg-white p-4"></div>
+  </div>
+
+  <div>
+    <h2 class="font-disp text-2xl text-fg">Digital Invoice</h2>
+    <div id="invoiceLive" class="mt-3 rounded-2xl overflow-hidden border border-stone-200 shadow-sm"></div>
+    <button id="btnDl" class="mt-4 w-full rounded-xl bg-fg text-cream font-semibold py-3.5">Simpan &amp; Download Invoice (PNG)</button>
+    <button id="btnWa" class="mt-3 w-full rounded-xl bg-wa text-white font-bold py-4 shadow-md flex items-center justify-center gap-2">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.700-1.600-2-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.600-.9-2.200-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.500s1.100 2.900 1.200 3.100c.1.200 2.100 3.200 5.100 4.500 2.500 1 3 .8 3.500.7.600-.1 1.700-.7 2-1.400.2-.7.2-1.300.2-1.400-.1-.2-.3-.3-.6-.4zM12 2a10 10 0 0 0-8.600 15.100L2 22l5-1.300A10 10 0 1 0 12 2z"/></svg>
+      Order &amp; Kirim Invoice ke WhatsApp
+    </button>
+    <p class="text-xs text-stone-500 mt-2 text-center">Pesanan terkonfirmasi setelah admin membalas di WhatsApp.</p>
+  </div>
+</section>
+
+<!-- TAB 2 -->
+<section id="tab-hist" class="pt-6 space-y-8 hidden">
+  <div>
+    <h2 class="font-disp text-2xl text-fg">Input invoice manual</h2>
+    <p class="text-sm text-stone-600 mt-1">Catat pesanan yang masuk lewat chat atau telepon.</p>
+    <div id="manualForm" class="mt-3 rounded-2xl border border-stone-200 bg-white p-4"></div>
+    <button id="btnManual" class="mt-3 w-full rounded-xl bg-fg text-cream font-semibold py-3.5">Simpan ke riwayat</button>
+  </div>
+  <div>
+    <div class="flex items-end justify-between">
+      <h2 class="font-disp text-2xl text-fg">Riwayat invoice</h2>
+      <span id="histCount" class="text-xs text-stone-500"></span>
+    </div>
+    <div id="histList" class="mt-3 space-y-3"></div>
+  </div>
+</section>
+</main>
+
+<footer class="bg-fg text-cream/80 text-center text-xs py-6 px-4">
+  FLORDE.ZAR · Sewa Papan Ucapan Padang · WhatsApp 0851-2805-0556
+</footer>
+
+<!-- Modal & helper -->
+<div id="modal" class="fixed inset-0 z-50 hidden bg-black/70 p-4 overflow-y-auto">
+  <div class="max-w-sm mx-auto bg-white rounded-2xl p-3 pop">
+    <img id="modalImg" alt="Invoice" class="w-full rounded-lg border">
+    <div class="grid grid-cols-2 gap-2 mt-3">
+      <a id="modalDl" class="text-center rounded-xl bg-fg text-cream font-semibold py-3 text-sm">Unduh PNG</a>
+      <button id="modalClose" class="rounded-xl border border-stone-300 font-semibold py-3 text-sm">Tutup</button>
+    </div>
+  </div>
+</div>
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-5 z-[60] hidden max-w-[90%] rounded-full bg-stone-900 text-white text-sm px-4 py-2.5"></div>
+<div id="offscreen" style="position:fixed;left:-10000px;top:0;width:380px"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- Data ---------- */
+const PRODUCTS = {
+  standard: { name: 'Papan Standar Persegi', sub: 'Classic Maroon/Cream', desc: 'Papan persegi klasik dengan rangkaian bunga di sudut. Cocok untuk ucapan selamat sehari-hari.', price: 99000, shape: 'square', theme: 'maroon' },
+  round:    { name: 'Papan Bulat Estetik', sub: 'Round Acrylic/Board Floral', desc: 'Papan bulat dengan bunga melengkung mengikuti tepi. Tampil lembut dan menarik di foto.', price: 150000, shape: 'round', theme: 'bluewhite' },
+  premium:  { name: 'Papan Premium Full-Flower', sub: 'Large Wedding/Grand Opening', desc: 'Papan besar dengan bunga penuh. Pilihan untuk pernikahan dan grand opening.', price: 250000, shape: 'wide', theme: 'creamgold' }
+};
+const THEMES = {
+  maroon:    { n: 'Maroon',     bg: '#6b1220', fg: '#f6e7d8', bd: '4px solid #e8c9a0' },
+  bluewhite: { n: 'Biru-Putih', bg: '#ffffff', fg: '#1d4e89', bd: '4px solid #7fb2e5' },
+  creamgold: { n: 'Cream-Gold', bg: '#f5ecd7', fg: '#8a6a1f', bd: '4px solid #d4af37' },
+  blackgold: { n: 'Hitam-Emas', bg: '#141414', fg: '#d4af37', bd: '4px solid #d4af37' }
+};
+const ADD = { lamp: 25000, express: 30000 };
+const CATS = ['Happy Wedding', 'Congratulations', 'Grand Opening', 'Turut Berduka Cita'];
+const WA_NUMBER = '6285128050556';
+const KEY = 'fdz_invoices', CK = 'fdz_counter';
+
+/* ---------- Utils ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const rp = n => 'Rp ' + Number(n).toLocaleString('id-ID');
+const IN = 'w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-fg';
+const LB = 'block text-sm font-medium text-stone-700 mb-1';
+
+function store() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
+function putStore(a) { try { localStorage.setItem(KEY, JSON.stringify(a)); return true; } catch (e) { toast('Penyimpanan browser penuh atau dinonaktifkan.'); return false; } }
+function counter() { try { return parseInt(localStorage.getItem(CK) || '0', 10) || 0; } catch (e) { return 0; } }
+function setCounter(n) { try { localStorage.setItem(CK, String(n)); } catch (e) {} }
+const invNo = n => 'INV-FDZ-' + new Date().getFullYear() + '-' + String(n).padStart(3, '0');
+let draftN = counter() + 1;
+
+let toastT;
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.remove('hidden'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.add('hidden'), 2800); }
+const fmtDate = v => { if (!v) return '-'; const d = new Date(v); return isNaN(d) ? v : d.toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' }); };
+const total = r => PRODUCTS[r.product].price + (r.lamp ? ADD.lamp : 0) + (r.express ? ADD.express : 0);
+
+/* ---------- Board drawing ---------- */
+function boardHTML(shape, th, head, rec, snd, ph) {
+  const t = THEMES[th];
+  const w = shape === 'round' ? 74 : shape === 'wide' ? 100 : 76;
+  const ar = shape === 'round' ? '1/1' : shape === 'wide' ? '4/3' : '4/5';
+  const rad = shape === 'round' ? '50%' : '12px';
+  const pos = [['top:-.7em;left:-.5em', '🌸'], ['top:-.6em;right:-.4em', '🌹'], ['bottom:-.7em;left:-.4em', '🌷'], ['bottom:-.6em;right:-.5em', '🌺'], ['top:42%;left:-.9em', '🌼'], ['top:42%;right:-.9em', '🌸']];
+  const n = shape === 'wide' ? 6 : 3;
+  const fl = pos.slice(0, n).map(p => `<span style="position:absolute;${p[0]};font-size:2em;line-height:1">${p[1]}</span>`).join('');
+  const dim = ph ? 'opacity:.55;' : '';
+  return `<div style="width:${w}%;margin:0 auto;aspect-ratio:${ar};position:relative;background:${t.bg};color:${t.fg};border:${t.bd};border-radius:${rad};display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.4em;box-shadow:0 8px 18px rgba(0,0,0,.22)">${fl}
+    <div style="font-family:Fraunces,serif;font-style:italic;font-size:1.15em;overflow-wrap:anywhere;${head ? '' : dim}">${esc(head || 'Happy Wedding')}</div>
+    <div style="font-weight:700;font-size:1.7em;line-height:1.15;margin:.3em 0;overflow-wrap:anywhere;${rec ? '' : dim}">${esc(rec || 'Nama Penerima')}</div>
+    <div style="font-size:.8em;overflow-wrap:anywhere;${snd ? 'opacity:.9' : dim}">${esc(snd || 'Dari: Pengirim')}</div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:42%;margin-top:-2px"><i style="width:4px;height:3.2em;background:#2b2b2b;transform:rotate(8deg);display:block"></i><i style="width:4px;height:3.2em;background:#2b2b2b;transform:rotate(-8deg);display:block"></i></div>`;
+}
+
+/* ---------- Form template (shared by main + manual) ---------- */
+function formHTML(p) {
+  const opt = (o, sel) => Object.entries(o).map(([k, v]) => `<option value="${k}"${k === sel ? ' selected' : ''}>${esc(v)}</option>`).join('');
+  const prodOpts = Object.fromEntries(Object.entries(PRODUCTS).map(([k, v]) => [k, `${v.name} – ${rp(v.price)}`]));
+  const themes = Object.entries(THEMES).map(([k, t], i) => `<label class="theme-opt cursor-pointer text-center text-xs">
+      <input type="radio" name="${p}theme" value="${k}" class="sr-only"${i === 0 ? ' checked' : ''}>
+      <span class="block h-11 rounded-lg border" style="background:${t.bg};border-color:${t.fg}"></span>${t.n}</label>`).join('');
+  return `<div class="space-y-4">
+    <div><label class="${LB}" for="${p}product">Jenis papan</label><select id="${p}product" class="${IN}">${opt(prodOpts, 'standard')}</select></div>
+    <div><span class="${LB}">Tema warna</span><div class="grid grid-cols-4 gap-2">${themes}</div></div>
+    <div><label class="${LB}" for="${p}cat">Kategori ucapan</label><select id="${p}cat" class="${IN}">${CATS.map(c => `<option>${c}</option>`).join('')}</select></div>
+    <div><label class="${LB}" for="${p}head">Header ucapan</label><input id="${p}head" class="${IN}" value="Happy Wedding" placeholder="Happy Wedding" maxlength="40"></div>
+    <div><label class="${LB}" for="${p}rec">Nama penerima / mempelai</label><input id="${p}rec" class="${IN}" placeholder="Vinda &amp; Fadhil" maxlength="50"></div>
+    <div><label class="${LB}" for="${p}snd">Nama pengirim / instansi</label><input id="${p}snd" class="${IN}" placeholder="Keluarga Besar ..." maxlength="60"></div>
+    <div><span class="${LB}">Add-ons</span>
+      <label class="flex items-center gap-3 py-1.5 text-sm"><input type="checkbox" id="${p}lamp" class="w-5 h-5 accent-[#1E3F20]"> Tambah Lampu Sorot (+Rp 25.000)</label>
+      <label class="flex items-center gap-3 py-1.5 text-sm"><input type="checkbox" id="${p}express" class="w-5 h-5 accent-[#1E3F20]"> Express/Mendadak &lt; H-1 (+Rp 30.000)</label></div>
+    <hr class="border-stone-200">
+    <div><label class="${LB}" for="${p}name">Nama pemesan</label><input id="${p}name" class="${IN}" autocomplete="name"></div>
+    <div><label class="${LB}" for="${p}wa">No. WhatsApp</label><input id="${p}wa" class="${IN}" type="tel" inputmode="tel" placeholder="08xxxxxxxxxx" autocomplete="tel"></div>
+    <div><label class="${LB}" for="${p}date">Tanggal &amp; jam acara</label><input id="${p}date" class="${IN}" type="datetime-local"></div>
+    <div><label class="${LB}" for="${p}addr">Alamat lengkap pengiriman di Padang</label><textarea id="${p}addr" rows="3" class="${IN}" placeholder="Nama gedung/jalan, kelurahan, kecamatan"></textarea></div>
+  </div>`;
+}
+function read(p) {
+  const v = id => $(p + id).value.trim();
+  return { product: $(p + 'product').value, theme: document.querySelector(`input[name=${p}theme]:checked`).value,
+    cat: $(p + 'cat').value, head: v('head'), rec: v('rec'), snd: v('snd'), lamp: $(p + 'lamp').checked, express: $(p + 'express').checked,
+    name: v('name'), wa: v('wa'), date: $(p + 'date').value, addr: v('addr') };
+}
+function validate(r) {
+  if (!r.name) return 'Isi nama pemesan.';
+  if (r.wa.replace(/\D/g, '').length < 9) return 'Isi nomor WhatsApp yang valid.';
+  if (!r.date) return 'Isi tanggal & jam acara.';
+  if (!r.addr) return 'Isi alamat pengiriman.';
+  if (!r.head) return 'Isi header ucapan.';
+  if (!r.rec) return 'Isi nama penerima / mempelai.';
+  return '';
+}
+
+/* ---------- Invoice ---------- */
+function invoiceHTML(r) {
+  const P = PRODUCTS[r.product], T = THEMES[r.theme];
+  const row = (a, b, c) => `<tr class="border-b border-stone-200 align-top"><td class="py-2 pr-2">${a}${c ? `<div class="text-[11px] text-stone-500">${c}</div>` : ''}</td><td class="py-2 text-right whitespace-nowrap">${b}</td></tr>`;
+  return `<div style="background:#fff;font-family:Inter,sans-serif;color:#222" class="text-[13px]">
+    <div style="background:#1E3F20;color:#FAF8F5" class="px-5 py-4">
+      <div style="font-family:Fraunces,serif;font-size:22px;letter-spacing:.04em">FLORDE.ZAR</div>
+      <div style="font-family:Fraunces,serif;font-style:italic;color:#f2d9a0;font-size:13px">From Heart To Bloom</div></div>
+    <div class="px-5 py-4">
+      <div class="flex justify-between gap-3"><div><div class="text-[11px] text-stone-500">No. Invoice</div><div class="font-bold">${esc(r.id)}</div></div>
+      <div class="text-right"><div class="text-[11px] text-stone-500">Tanggal dibuat</div><div>${new Date(r.created).toLocaleDateString('id-ID', { dateStyle: 'medium' })}</div></div></div>
+      <div class="mt-3 text-[11px] text-stone-500">Pemesan</div>
+      <div class="font-semibold">${esc(r.name || '-')} · ${esc(r.wa || '-')}</div>
+      <div class="mt-2 text-[11px] text-stone-500">Acara</div><div>${esc(fmtDate(r.date))}</div>
+      <div class="mt-2 text-[11px] text-stone-500">Alamat pengiriman</div><div>${esc(r.addr || '-')}</div>
+      <table class="w-full mt-4 text-[13px]">
+        ${row(esc(P.name), rp(P.price), esc(P.sub))}
+        ${row('Tema warna: ' + esc(T.n), '')}
+        ${row('Ucapan: ' + esc(r.cat), '', `${esc(r.head || '-')}<br>Untuk: ${esc(r.rec || '-')}<br>Dari: ${esc(r.snd || '-')}`)}
+        ${r.lamp ? row('Lampu Sorot', rp(ADD.lamp)) : ''}
+        ${r.express ? row('Express/Mendadak', rp(ADD.express)) : ''}
+      </table>
+      <div class="flex justify-between items-center mt-3 pt-1"><span class="font-semibold">Total</span><span style="color:#1E3F20" class="text-lg font-bold">${rp(total(r))}</span></div>
+      <p class="mt-3 text-[11px] text-stone-500">Layanan sewa papan. Belum termasuk ongkos kirim (dihitung berdasarkan lokasi pemasangan).</p>
+    </div></div>`;
+}
+const toRecord = (f, n) => ({ ...f, id: invNo(n), n, created: Date.now() });
+
+async function makeCanvas(r) {
+  const box = document.createElement('div');
+  box.style.width = '380px'; box.innerHTML = invoiceHTML(r);
+  $('offscreen').appendChild(box);
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    return await html2canvas(box, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
+  } finally { box.remove(); }
+}
+function download(canvas, name) {
+  const a = document.createElement('a'); a.download = name + '.png'; a.href = canvas.toDataURL('image/png');
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function waText(r) {
+  const P = PRODUCTS[r.product], T = THEMES[r.theme];
+  const add = [r.lamp && 'Lampu Sorot', r.express && 'Express/Mendadak'].filter(Boolean).join(', ') || '-';
+  return [`*ORDER FLORDE.ZAR*`, `No. Invoice: *${r.id}*`, ``, `*Data Pemesan*`, `Nama: ${r.name}`, `WhatsApp: ${r.wa}`, `Acara: ${fmtDate(r.date)}`, `Alamat: ${r.addr}`, ``,
+    `*Detail Papan*`, `Jenis: ${P.name} (${P.sub})`, `Tema: ${T.n}`, `Kategori: ${r.cat}`, `Header: ${r.head}`, `Untuk: ${r.rec}`, `Dari: ${r.snd || '-'}`, `Add-ons: ${add}`, ``,
+    `*TOTAL: ${rp(total(r))}*`, `(Belum termasuk ongkos kirim)`].join('\n');
+}
+function openWa(r) {
+  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waText(r))}`;
+  const w = window.open(url, '_blank');
+  if (!w) location.href = url;
+}
+function saveRecord(r) {
+  const a = store().filter(x => x.id !== r.id); a.unshift(r);
+  if (!putStore(a)) return false;
+  setCounter(Math.max(counter(), r.n)); return true;
+}
+
+/* ---------- Render ---------- */
+function renderCards() {
+  const cur = $('fproduct').value;
+  $('cards').innerHTML = Object.entries(PRODUCTS).map(([k, p]) => `<article class="pcard rounded-2xl border border-stone-200 bg-white overflow-hidden ${k === cur ? 'sel' : ''}">
+    <div class="stage px-8 pt-7 pb-3" style="font-size:9px">${boardHTML(p.shape, p.theme, 'Congratulations', 'Nama Penerima', 'Dari: Pengirim')}</div>
+    <div class="p-4"><h3 class="font-semibold">${esc(p.name)}</h3><p class="text-xs text-stone-500">${esc(p.sub)}</p>
+    <p class="text-sm text-stone-600 mt-2">${esc(p.desc)}</p>
+    <div class="flex items-center justify-between mt-3"><span class="text-lg font-bold text-fg">${rp(p.price)}</span>
+    <button data-pick="${k}" class="rounded-xl bg-fg text-cream text-sm font-semibold px-4 py-2.5">${k === cur ? 'Terpilih' : 'Pilih Papan'}</button></div></div></article>`).join('');
+}
+function update() {
+  const f = read('f');
+  $('preview').innerHTML = boardHTML(PRODUCTS[f.product].shape, f.theme, f.head, f.rec, f.snd ? 'Dari: ' + f.snd : '', true);
+  $('invoiceLive').innerHTML = invoiceHTML(toRecord(f, draftN));
+  renderCards();
+}
+function renderHist() {
+  const a = store();
+  $('histCount').textContent = a.length + ' invoice';
+  $('histList').innerHTML = a.length ? a.map(r => `<div class="rounded-2xl border border-stone-200 bg-white p-4">
+    <div class="flex justify-between gap-2"><div><div class="font-bold text-sm">${esc(r.id)}</div><div class="text-xs text-stone-500">${new Date(r.created).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}${r.manual ? ' · manual' : ''}</div></div>
+    <div class="font-bold text-fg">${rp(total(r))}</div></div>
+    <div class="text-sm mt-2">${esc(r.name)} · ${esc(PRODUCTS[r.product].name)}</div>
+    <div class="text-xs text-stone-500">${esc(r.head)} – ${esc(r.rec)}</div>
+    <div class="grid grid-cols-3 gap-2 mt-3 text-xs font-semibold">
+      <button data-view="${esc(r.id)}" class="rounded-lg bg-fg text-cream py-2.5">Lihat/Unduh PNG</button>
+      <button data-resend="${esc(r.id)}" class="rounded-lg bg-wa text-white py-2.5">Kirim Ulang ke WA</button>
+      <button data-del="${esc(r.id)}" class="rounded-lg border border-red-300 text-red-700 py-2.5">Hapus</button></div></div>`).join('')
+    : '<p class="rounded-2xl border border-dashed border-stone-300 p-6 text-center text-sm text-stone-500">Belum ada invoice. Buat pesanan di tab Katalog atau catat manual di atas.</p>';
+}
+
+/* ---------- Events ---------- */
+function showTab(t) {
+  $('tab-order').classList.toggle('hidden', t !== 'order'); $('tab-hist').classList.toggle('hidden', t !== 'hist');
+  document.querySelectorAll('.tabbtn').forEach(b => { const on = b.dataset.tab === t; b.classList.toggle('border-fg', on); b.classList.toggle('text-fg', on); b.classList.toggle('border-transparent', !on); b.classList.toggle('text-stone-500', !on); });
+  if (t === 'hist') renderHist();
+  window.scrollTo({ top: 0 });
+}
+function openModal(canvas, name) {
+  $('modalImg').src = canvas.toDataURL('image/png'); $('modalDl').href = $('modalImg').src; $('modalDl').download = name + '.png';
+  $('modal').classList.remove('hidden');
+}
+function advance() { draftN = counter() + 1; update(); }
+
+function init() {
+  $('mainForm').innerHTML = formHTML('f'); $('manualForm').innerHTML = formHTML('m');
+  document.querySelectorAll('.tabbtn').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+  showTab('order');
+
+  $('mainForm').addEventListener('input', update);
+  $('mainForm').addEventListener('change', e => { if (e.target.id === 'fcat') { $('fhead').value = e.target.value; } update(); });
+  $('manualForm').addEventListener('change', e => { if (e.target.id === 'mcat') $('mhead').value = e.target.value; });
+
+  $('cards').addEventListener('click', e => {
+    const b = e.target.closest('[data-pick]'); if (!b) return;
+    const k = b.dataset.pick; $('fproduct').value = k;
+    document.querySelector(`input[name=ftheme][value=${PRODUCTS[k].theme}]`).checked = true;
+    update();
+    $('customizer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast(PRODUCTS[k].name + ' dipilih');
+  });
+
+  $('btnDl').addEventListener('click', async () => {
+    const f = read('f'), err = validate(f); if (err) return toast(err);
+    const r = toRecord(f, draftN); $('btnDl').disabled = true;
+    try {
+      const c = await makeCanvas(r); download(c, r.id);
+      if (saveRecord(r)) { toast(r.id + ' tersimpan di riwayat'); advance(); }
+    } catch (e) { toast('Gagal membuat gambar invoice. Coba lagi.'); }
+    $('btnDl').disabled = false;
+  });
+  $('btnWa').addEventListener('click', () => {
+    const f = read('f'), err = validate(f); if (err) return toast(err);
+    const r = toRecord(f, draftN);
+    if (!saveRecord(r)) return;
+    openWa(r); toast(r.id + ' tersimpan'); advance();
+  });
+
+  $('btnManual').addEventListener('click', () => {
+    const f = read('m'), err = validate(f); if (err) return toast(err);
+    const n = counter() + 1, r = { ...toRecord(f, n), manual: true };
+    if (!saveRecord(r)) return;
+    toast(r.id + ' dicatat'); renderHist(); advance();
+    $('mname').value = $('mwa').value = $('mrec').value = $('msnd').value = $('maddr').value = $('mdate').value = '';
+  });
+
+  $('histList').addEventListener('click', async e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const id = b.dataset.view || b.dataset.resend || b.dataset.del;
+    const r = store().find(x => x.id === id); if (!r) return;
+    if (b.dataset.view) { b.disabled = true; try { openModal(await makeCanvas(r), r.id); } catch (er) { toast('Gagal membuat gambar.'); } b.disabled = false; }
+    else if (b.dataset.resend) openWa(r);
+    else if (b.dataset.del && confirm('Hapus ' + id + ' dari riwayat?')) { putStore(store().filter(x => x.id !== id)); renderHist(); toast('Riwayat dihapus'); }
+  });
+
+  $('modalClose').addEventListener('click', () => $('modal').classList.add('hidden'));
+  $('modal').addEventListener('click', e => { if (e.target === $('modal')) $('modal').classList.add('hidden'); });
+  update();
+}
+init();
+})();
+</script>
+</body>
+</html>
